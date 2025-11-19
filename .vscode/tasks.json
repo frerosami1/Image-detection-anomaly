@@ -1,0 +1,165 @@
+{
+  "version": "2.0.0",
+  "inputs": [],
+  "tasks": [
+    {
+      "label": "Setup Project Environment",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["setup.py"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Train PaDiM Model",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "scripts\\train_model.py",
+        "--config",
+        "configs\\padim.yaml"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Inference",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "scripts\\run_inference.py",
+        "--model",
+        "models\\padim_trained.ckpt",
+        "--input",
+        "datasets\\MVTecAD\\bottle\\test"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Train PatchCore Model",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "scripts\\train_model.py",
+        "--config",
+        "configs\\patchcore_folder.yaml"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run PatchCore Inference",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "scripts\\run_inference.py",
+        "--model",
+        "models\\patchcore_folder_trained.ckpt",
+        "--input",
+  "data\\datasets\\your_dataset\\test"  // UPDATE after adding your dataset
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    }
+    ,
+    {
+      "label": "Predict PatchCore (CLI)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\anomalib.exe",
+      "args": [
+        "predict",
+        "--config",
+        "configs\\patchcore_ready.yaml",
+        "--ckpt_path",
+        "models\\patchcore_ready.ckpt"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    }
+    ,
+    {
+      "label": "Train PatchCore (Engine API)",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "scripts\\train_engine.py",
+        "--dataset_type",
+        "folder",
+        "--dataset_root",
+        "datasets\\MVTecAD",
+        "--name",
+        "bottle",
+        "--max_epochs",
+        "1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    }
+    ,
+    {
+      "label": "Find Threshold",
+      "type": "shell",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": [
+        "scripts\\find_threshold.py",
+        "--csv",
+        "outputs\\predictions\\scores.csv",
+        "--out",
+        "outputs\\predictions\\threshold.json"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "PYTHONUTF8": "1"
+        }
+      },
+      "group": "build",
+      "problemMatcher": []
+    }
+    ,
+    
+  ]
+}

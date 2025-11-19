@@ -1,0 +1,58 @@
+# PatchCore Model Configuration
+# Memory-efficient anomaly detection using coreset
+
+model:
+  name: patchcore
+  backbone: wide_resnet50_2
+  pre_trained: true
+  layers:
+    - layer2
+    - layer3
+    - layer4
+  coreset_sampling_ratio: 0.2
+  num_neighbors: 15
+
+dataset:
+  name: MVTecAD
+  format: mvtec
+  path: ./datasets/MVTecAD
+  category: bottle  # Change to: cable, capsule, carpet, etc.
+  normal_dir: normal
+  abnormal_dir: abnormal
+  task: segmentation
+  image_size: [224, 224]
+  center_crop: null
+  normalization: imagenet
+  train_batch_size: 32
+  eval_batch_size: 32
+  num_workers: 4
+
+metrics:
+  image:
+    - AUROC
+    - F1Score
+  pixel:
+    - AUROC
+    - F1Score
+  threshold:
+    method: adaptive
+
+trainer:
+  enable_checkpointing: true
+  default_root_dir: ./experiments/patchcore
+  gpus: 1
+  max_epochs: 1
+  val_check_interval: 1.0
+  check_val_every_n_epoch: 1
+
+optimization:
+  export_mode: torch
+
+logging:
+  logger:
+    - tensorboard
+  log_graph: false
+
+project:
+  seed: 42
+  path: ./logs

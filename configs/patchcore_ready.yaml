@@ -1,0 +1,35 @@
+# PatchCore ready-to-use config for Anomalib CLI (v2.x)
+
+model:
+  class_path: anomalib.models.image.patchcore.lightning_model.Patchcore
+  init_args:
+    backbone: wide_resnet50_2
+    layers:
+      - layer2
+      - layer3
+    pre_trained: true
+    coreset_sampling_ratio: 0.1
+    num_neighbors: 9
+
+data:
+  class_path: anomalib.data.datamodules.image.folder.Folder
+  init_args:
+    name: bottle
+    root: datasets/MVTecAD
+    normal_dir: train/normal
+    abnormal_dir: test/abnormal
+    normal_test_dir: test/normal
+    train_batch_size: 8
+    eval_batch_size: 8
+    num_workers: 0
+    test_split_mode: from_dir
+    val_split_mode: from_test
+    seed: 42
+
+trainer:
+  max_epochs: 1
+  accelerator: cpu
+  default_root_dir: experiments/patchcore_ready
+  log_every_n_steps: 1
+  enable_checkpointing: true
+

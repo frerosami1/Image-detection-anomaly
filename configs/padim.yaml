@@ -1,0 +1,62 @@
+# PaDiM Model Configuration
+# Patch Distribution Modeling for anomaly detection
+
+model:
+  name: padim
+  backbone: resnet18
+  pre_trained: true
+  layers:
+    - layer1
+    - layer2
+    - layer3
+
+dataset:
+  name: MVTecAD
+  format: mvtec
+  path: ./datasets/MVTecAD
+  category: bottle  # Change to: cable, capsule, carpet, etc.
+  normal_dir: normal
+  abnormal_dir: abnormal
+  task: segmentation  # or classification
+  image_size: [224, 224]
+  center_crop: null
+  normalization: imagenet
+  train_batch_size: 32
+  eval_batch_size: 32
+  num_workers: 4
+  transform_config:
+    train: null
+    eval: null
+
+metrics:
+  image:
+    - AUROC
+    - F1Score
+  pixel:
+    - AUROC
+    - F1Score
+  threshold:
+    method: adaptive
+    manual_threshold: null
+
+trainer:
+  enable_checkpointing: true
+  default_root_dir: ./experiments/padim
+  gpus: 1
+  max_epochs: 1  # PaDiM is non-parametric, only needs 1 epoch
+  val_check_interval: 1.0
+  check_val_every_n_epoch: 1
+  log_every_n_steps: 50
+
+optimization:
+  export_mode: torch  # or openvino, onnx
+
+logging:
+  logger:
+    - tensorboard
+  log_graph: false
+  
+project:
+  seed: 42
+  path: ./logs
+  notes: "Edit dataset.path and dataset.name before training. Structure: train/normal, test/normal, test/abnormal, optional ground_truth/abnormal for masks."
